@@ -1,46 +1,38 @@
 # kotikDB
 Простенькая библиотека для работы с json, её мощность зависит от доступных ресурсов на системе
 
-# Конфиг
-| Ключ    | Задача                                                                                                                          |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| maxsize | В зависимости от средней скорости HDD/SSD установите оптимальный лимит разделения файлов в кб при котором диск легко загрузит   |
+# config.json
+| Ключ    | Описание                                               |
+| ------- | ------------------------------------------------------ |
+| maxsize | указать кол-во хранящихся элементов кэшированных в озу |
+| ttl     | указать время жизни элемента кэшированного в озу       |
 
 # Пример использования
 - Используйте async для работы с бд
 
-Добавляем ключ test,vyv в бд
+Что-то надо добавить
 ```js
-const { init, readJSON, writeJSON } = require("./kotikDB");
+const { readDB, writeDB } = require("./kotikDB");
 
-let data = {};
+const data = await readDB();
+
 data.test = 1;
-data.vyv = 1;
 
-await init();
-
-writeJSON(data);
-console.log(await readJSON());
+await writeDB(data);
 ```
 
-Допустим бд содержит `{ "123": { test: 1 }}`, иззменили test на 2 вложенным 123
+Что-то надо прочитать
 ```js
-const { init, readJSON, writeJSON } = require("./kotikDB");
-
-await init();
-
-writeJSON({ "123": { test: 2 }});
-console.log(await readJSON());
+console.log(await readDB().test);
 ```
 
-Нужно что-то удалить `{ test: 1, vyv: {kek:1}, "0": { "1": { bymba: 10 }}}`, тут важно использовать await иначе будет баг в бд
+Что-то надо удалить
 ```js
-const { init, readJSON, deleteElem } = require("./kotikDB");
+const { readDB, writeDB } = require("./kotikDB");
 
-await init();
+const data = await readDB();
 
-await deleteElem([], "test");
-await deleteElem(["vyv"], "kek");
-await deleteElem(["0", "1"], "bymba");
-console.log(await readJSON());
+delete data.test;
+
+await writeDB(data);
 ```
